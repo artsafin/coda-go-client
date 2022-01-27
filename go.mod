@@ -1,4 +1,4 @@
-module github.com/artsafin/coda-go-client/codaapi
+module github.com/artsafin/coda-go-client
 
 go 1.17
 
