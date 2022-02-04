@@ -71,6 +71,8 @@ const (
 
 	ColumnFormatTypeImage ColumnFormatType = "image"
 
+	ColumnFormatTypeLink ColumnFormatType = "link"
+
 	ColumnFormatTypeLookup ColumnFormatType = "lookup"
 
 	ColumnFormatTypeNumber ColumnFormatType = "number"
@@ -271,6 +273,19 @@ const (
 	LayoutWordCloud Layout = "wordCloud"
 )
 
+// Defines values for LinkDisplayType.
+const (
+	LinkDisplayTypeCard LinkDisplayType = "card"
+
+	LinkDisplayTypeEmbed LinkDisplayType = "embed"
+
+	LinkDisplayTypeIconOnly LinkDisplayType = "iconOnly"
+
+	LinkDisplayTypeTitle LinkDisplayType = "title"
+
+	LinkDisplayTypeUrl LinkDisplayType = "url"
+)
+
 // Defines values for LinkedDataType.
 const (
 	LinkedDataTypeImageObject LinkedDataType = "ImageObject"
@@ -438,13 +453,11 @@ type AccessType string
 // List of Permissions.
 type Acl struct {
 	// API link to these results
-	Href         string       `json:"href"`
-	Items        []Permission `json:"items"`
-	NextPageLink *struct {
-		// Embedded struct due to allOf(#/components/schemas/nextPageLink)
-		NextPageLink `yaml:",inline"`
-		// Embedded fields due to inline allOf schema
-	} `json:"nextPageLink,omitempty"`
+	Href  string       `json:"href"`
+	Items []Permission `json:"items"`
+
+	// If specified, a link that can be used to fetch the next page of results.
+	NextPageLink *NextPageLink `json:"nextPageLink,omitempty"`
 
 	// If specified, an opaque token used to fetch the next page of results.
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty"`
@@ -634,13 +647,11 @@ type ColumnFormatType string
 // List of columns.
 type ColumnList struct {
 	// API link to these results
-	Href         *string  `json:"href,omitempty"`
-	Items        []Column `json:"items"`
-	NextPageLink *struct {
-		// Embedded struct due to allOf(#/components/schemas/nextPageLink)
-		NextPageLink `yaml:",inline"`
-		// Embedded fields due to inline allOf schema
-	} `json:"nextPageLink,omitempty"`
+	Href  *string  `json:"href,omitempty"`
+	Items []Column `json:"items"`
+
+	// If specified, a link that can be used to fetch the next page of results.
+	NextPageLink *NextPageLink `json:"nextPageLink,omitempty"`
 
 	// If specified, an opaque token used to fetch the next page of results.
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty"`
@@ -691,13 +702,11 @@ type ControlType string
 // List of controls.
 type ControlList struct {
 	// API link to these results
-	Href         *string            `json:"href,omitempty"`
-	Items        []ControlReference `json:"items"`
-	NextPageLink *struct {
-		// Embedded struct due to allOf(#/components/schemas/nextPageLink)
-		NextPageLink `yaml:",inline"`
-		// Embedded fields due to inline allOf schema
-	} `json:"nextPageLink,omitempty"`
+	Href  *string            `json:"href,omitempty"`
+	Items []ControlReference `json:"items"`
+
+	// If specified, a link that can be used to fetch the next page of results.
+	NextPageLink *NextPageLink `json:"nextPageLink,omitempty"`
 
 	// If specified, an opaque token used to fetch the next page of results.
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty"`
@@ -842,12 +851,10 @@ type DocType string
 
 // List of analytics for Coda docs over a date range.
 type DocAnalyticsCollection struct {
-	Items        []DocAnalyticsItem `json:"items"`
-	NextPageLink *struct {
-		// Embedded struct due to allOf(#/components/schemas/nextPageLink)
-		NextPageLink `yaml:",inline"`
-		// Embedded fields due to inline allOf schema
-	} `json:"nextPageLink,omitempty"`
+	Items []DocAnalyticsItem `json:"items"`
+
+	// If specified, a link that can be used to fetch the next page of results.
+	NextPageLink *NextPageLink `json:"nextPageLink,omitempty"`
 
 	// If specified, an opaque token used to fetch the next page of results.
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty"`
@@ -920,13 +927,11 @@ type DocDelete map[string]interface{}
 // List of Coda docs.
 type DocList struct {
 	// API link to these results
-	Href         *string `json:"href,omitempty"`
-	Items        []Doc   `json:"items"`
-	NextPageLink *struct {
-		// Embedded struct due to allOf(#/components/schemas/nextPageLink)
-		NextPageLink `yaml:",inline"`
-		// Embedded fields due to inline allOf schema
-	} `json:"nextPageLink,omitempty"`
+	Href  *string `json:"href,omitempty"`
+	Items []Doc   `json:"items"`
+
+	// If specified, a link that can be used to fetch the next page of results.
+	NextPageLink *NextPageLink `json:"nextPageLink,omitempty"`
 
 	// If specified, an opaque token used to fetch the next page of results.
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty"`
@@ -1186,13 +1191,11 @@ type FormulaDetail struct {
 // List of formulas.
 type FormulaList struct {
 	// API link to these results
-	Href         *string            `json:"href,omitempty"`
-	Items        []FormulaReference `json:"items"`
-	NextPageLink *struct {
-		// Embedded struct due to allOf(#/components/schemas/nextPageLink)
-		NextPageLink `yaml:",inline"`
-		// Embedded fields due to inline allOf schema
-	} `json:"nextPageLink,omitempty"`
+	Href  *string            `json:"href,omitempty"`
+	Items []FormulaReference `json:"items"`
+
+	// If specified, a link that can be used to fetch the next page of results.
+	NextPageLink *NextPageLink `json:"nextPageLink,omitempty"`
 
 	// If specified, an opaque token used to fetch the next page of results.
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty"`
@@ -1281,6 +1284,18 @@ type ImageUrlValue struct {
 // Layout type of the table or view.
 type Layout string
 
+// LinkColumnFormat defines model for LinkColumnFormat.
+type LinkColumnFormat struct {
+	// Embedded struct due to allOf(#/components/schemas/SimpleColumnFormat)
+	SimpleColumnFormat `yaml:",inline"`
+	// Embedded fields due to inline allOf schema
+	// How a link should be displayed in the user interface.
+	Display *LinkDisplayType `json:"display,omitempty"`
+}
+
+// How a link should be displayed in the user interface.
+type LinkDisplayType string
+
 // Base type for a JSON-LD (Linked Data) object.
 type LinkedDataObject struct {
 	// A url describing the schema context for this object, typically "http://schema.org/".
@@ -1354,13 +1369,11 @@ type PageType string
 // List of pages.
 type PageList struct {
 	// API link to these results
-	Href         *string `json:"href,omitempty"`
-	Items        []Page  `json:"items"`
-	NextPageLink *struct {
-		// Embedded struct due to allOf(#/components/schemas/nextPageLink)
-		NextPageLink `yaml:",inline"`
-		// Embedded fields due to inline allOf schema
-	} `json:"nextPageLink,omitempty"`
+	Href  *string `json:"href,omitempty"`
+	Items []Page  `json:"items"`
+
+	// If specified, a link that can be used to fetch the next page of results.
+	NextPageLink *NextPageLink `json:"nextPageLink,omitempty"`
 
 	// If specified, an opaque token used to fetch the next page of results.
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty"`
@@ -1574,13 +1587,11 @@ type RowEdit struct {
 // List of rows.
 type RowList struct {
 	// API link to these results
-	Href         *string `json:"href,omitempty"`
-	Items        []Row   `json:"items"`
-	NextPageLink *struct {
-		// Embedded struct due to allOf(#/components/schemas/nextPageLink)
-		NextPageLink `yaml:",inline"`
-		// Embedded fields due to inline allOf schema
-	} `json:"nextPageLink,omitempty"`
+	Href  *string `json:"href,omitempty"`
+	Items []Row   `json:"items"`
+
+	// If specified, a link that can be used to fetch the next page of results.
+	NextPageLink *NextPageLink `json:"nextPageLink,omitempty"`
 
 	// If specified, an opaque token used to fetch the next page of results.
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty"`
@@ -1783,13 +1794,11 @@ type TableType string
 // List of tables.
 type TableList struct {
 	// API link to these results
-	Href         *string          `json:"href,omitempty"`
-	Items        []TableReference `json:"items"`
-	NextPageLink *struct {
-		// Embedded struct due to allOf(#/components/schemas/nextPageLink)
-		NextPageLink `yaml:",inline"`
-		// Embedded fields due to inline allOf schema
-	} `json:"nextPageLink,omitempty"`
+	Href  *string          `json:"href,omitempty"`
+	Items []TableReference `json:"items"`
+
+	// If specified, a link that can be used to fetch the next page of results.
+	NextPageLink *NextPageLink `json:"nextPageLink,omitempty"`
 
 	// If specified, an opaque token used to fetch the next page of results.
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty"`
@@ -1885,12 +1894,10 @@ type ValueFormat string
 
 // Response for listing workspace users.
 type WorkspaceMembersList struct {
-	Items        []WorkspaceUser `json:"items"`
-	NextPageLink *struct {
-		// Embedded struct due to allOf(#/components/schemas/nextPageLink)
-		NextPageLink `yaml:",inline"`
-		// Embedded fields due to inline allOf schema
-	} `json:"nextPageLink,omitempty"`
+	Items []WorkspaceUser `json:"items"`
+
+	// If specified, a link that can be used to fetch the next page of results.
+	NextPageLink *NextPageLink `json:"nextPageLink,omitempty"`
 
 	// If specified, an opaque token used to fetch the next page of results.
 	NextPageToken *NextPageToken `json:"nextPageToken,omitempty"`
