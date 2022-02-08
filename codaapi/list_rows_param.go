@@ -3,7 +3,6 @@ package codaapi
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 )
 
 type ListRowsParam func(target *ListRowsParams)
@@ -21,8 +20,6 @@ var ListRows = struct {
 	Query: func(columnNameOrID, value string) ListRowsParam {
 		valueBs, _ := json.Marshal(value)
 		query := fmt.Sprintf("%s:%s", columnNameOrID, valueBs)
-
-		log.Printf("query: %v", query)
 
 		return func(target *ListRowsParams) {
 			target.Query = &query
